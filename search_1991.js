@@ -1,55 +1,8 @@
 class Node {
-  constructor(data) {
+  constructor(data, left, right) {
     this.data = data
-    this.left = null
-    this.right = null
-  }
-}
-
-class BinaryTree {
-  constructor() {
-    this._head = null
-  }
-
-  insert(data) {
-    if (this._head) {
-      let currNode = this._head
-      while (true) {
-        // 왼쪽부터 채움
-        if (!currNode.left) {
-          currNode.left = new Node(data)
-          break
-        } else if (!currNode.right) {
-          currNode.right = new Node(data)
-          break
-        } else {
-          // 둘다있어
-          if (currNode.left) currNode = currNode.left
-          else if (currNode.right) currNode = currNode.right
-        }
-        // else {
-        //   currNode = currNode.left
-        // }
-
-        // if (data < currNode.data) {
-        //   if (currNode.left) {
-        //     currNode = currNode.left
-        //   } else {
-        //     currNode.left = new Node(data)
-        //     break
-        //   }
-        // } else {
-        //   if (currNode.right) {
-        //     currNode = currNode.right
-        //   } else {
-        //     currNode.right = new Node(data)
-        //     break
-        //   }
-        // }
-      }
-    } else {
-      this._head = new Node(data)
-    }
+    this.left = left
+    this.right = right
   }
 }
 
@@ -57,51 +10,67 @@ function solution(params) {
   const input = params.split("\n")
   const n = parseInt(input.shift())
   const tree = getTree(input)
-  console.log(tree)
-  function getTree(params) {
-    const tree = new Map()
+  // console.log(tree)
+
+  function getTree() {
+    const tree = {}
     for (let i = 0; i < n; i++) {
-      const elem = params[i].split(" ")
-      if (elem[1] != "." && elem[2] != ".") tree.set(elem[0], [elem[1], elem[2]])
-      else if (elem[1] != ".") {
-        tree.set(elem[0], [elem[1]])
-      } else if (elem[2] != ".") {
-        tree.set(elem[0], [elem[2]])
-      }
+      const [parent, left, right] = input[i].split(" ")
+      tree[parent] = new Node(parent, left, right)
     }
     return tree
   }
+
   let answer = []
 
-  // 첫번째 글자를 넣어주면 된다.
-  preOrderTraversal(input[0].split(" ")[0])
+  const key = input[0].split(" ")[0]
+  preOrderTraversal(key)
   console.log(answer.join(""))
 
-  // dfs로 탐색하면된다.
+  answer = []
+  inOrderTraversal(key)
+  console.log(answer.join(""))
+
+  answer = []
+  postOrderTraversal(key)
+  console.log(answer.join(""))
+
   function preOrderTraversal(key) {
     answer.push(key)
-    const newNodes = tree.get(key)
-    for (let i in newNodes) {
-      const elem = newNodes[i]
-      preOrderTraversal(elem)
+    const node = tree[key]
+    if (node.left != ".") {
+      preOrderTraversal(node.left)
+    }
+    if (node.right != ".") preOrderTraversal(node.right)
+  }
+
+  // left -> parent -> right
+  function inOrderTraversal(key) {
+    const node = tree[key]
+    if (node.left != ".") {
+      inOrderTraversal(node.left)
+    }
+    answer.push(node.data)
+    // console.log(node, node.right)
+
+    if (node.right != ".") {
+      inOrderTraversal(node.right)
     }
   }
 
-  const bst = new BinaryTree()
-
-  for (let [key, value] of tree) {
-    console.log(key, value)
-    bst.insert(key)
-    for (let i = 0; i < value.length; i++) {
-      const element = value[i]
-      bst.insert(element)
+  // left -> right -> parent
+  function postOrderTraversal(key) {
+    const node = tree[key]
+    if (node.left != ".") {
+      postOrderTraversal(node.left)
     }
+
+    if (node.right != ".") {
+      postOrderTraversal(node.right)
+    }
+    answer.push(node.data)
+    // console.log(node, node.right)
   }
-  console.log("bst", JSON.stringify(bst))
-
-  function inOrderTraversal(tree) {}
-
-  function postOrderTraversal(tree) {}
 }
 
 // 전위 순회한 결과 : ABDCEFG // (루트) (왼쪽 자식) (오른쪽 자식)
