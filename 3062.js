@@ -3,14 +3,24 @@ function solution(params) {
   const n = parseInt(input.shift())
   for (let i = 0; i < n; i++) {
     const element = input[i]
-    // 더해서 10 미만
     const len = element.length
+    let reverse = []
+    for (let j = 0; j < len; j++) {
+      const elem = element[j]
+      reverse[len - 1 - j] = elem
+    }
+
+    let sum = Number(reverse.join("")) + Number(element)
+    sum = sum.toString()
+    const sumLen = sum.length
     let result = "YES"
-    for (let j = 0; j < Math.ceil(len / 2); j++) {
-      if (Number(element[j]) + Number(element[len - 1 - j]) >= 10) {
+    for (let j = 0; j < Math.ceil(sumLen / 2); j++) {
+      if (sum[j] != sum[sumLen - 1 - j]) {
         result = "NO"
+        break
       }
     }
+
     console.log(result)
   }
 }
