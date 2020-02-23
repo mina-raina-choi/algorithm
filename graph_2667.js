@@ -1,70 +1,7 @@
 function solution(params) {
   const input = params.split("\n")
   const n = parseInt(input.shift())
-
-  const visited = new Array(n).fill(null).map(a => new Array(n).fill(false))
-  const array = []
-
-  for (let i = 0; i < n; i++) {
-    const element = input
-      .shift()
-      .split("")
-      .map(a => +a)
-    array.push(element)
-  }
-  //   console.log(array, visited)
-  let count = 0
-  const houses = []
-
-  // 집 하나하나를 돌면서 몇개의 단지가 그려지는 지 체크
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) {
-      if (!visited[i][j] && array[i][j]) {
-        ++count
-        bfs([i, j])
-      }
-    }
-  }
-
-  console.log(count)
-  houses.sort().forEach(a => console.log(a))
-
-  function bfs(startNode) {
-    const q = [startNode]
-    const x = startNode[0],
-      y = startNode[1]
-    visited[x][y] = true
-    const directions = [
-      [1, 0],
-      [-1, 0],
-      [0, 1],
-      [0, -1]
-    ]
-    let houseCnt = array[x][y]
-    while (q.length > 0) {
-      const [x, y] = q.shift()
-      for (let i = 0; i < 4; i++) {
-        const elem = directions[i]
-        const nx = x + elem[0]
-        const ny = y + elem[1]
-
-        if (nx < 0 || nx >= n || ny < 0 || ny >= n) continue
-        if (!visited[nx][ny] && array[nx][ny]) {
-          //   dfs([nx, ny], houseCnt)
-          q.push([nx, ny])
-          visited[nx][ny] = true
-          houseCnt++
-        }
-      }
-    }
-    houses.push(houseCnt)
-    // console.log(houseCnt)
-  }
-}
-
-function dfs(startNode, houseCnt) {
-  const x = startNode[0],
-    y = startNode[1]
+  const array = input.map(a => a.split("").map(a => +a))
   const directions = [
     [1, 0],
     [-1, 0],
@@ -72,18 +9,65 @@ function dfs(startNode, houseCnt) {
     [0, -1]
   ]
 
-  visited[x][y] = true
+  let count = 0
+  const houses = []
 
-  for (let i = 0; i < 4; i++) {
-    const elem = directions[i]
-    const nx = x + elem[0]
-    const ny = y + elem[1]
-
-    if (nx < 0 || nx >= n || ny < 0 || ny >= n) continue
-    if (!visited[nx][ny] && array[nx][ny]) {
-      houseCnt++
-      dfs([nx, ny], houseCnt)
+  // 집 하나하나를 돌면서 몇개의 단지가 그려지는 지 체크
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      if (array[i][j] == 1) {
+        count += 1
+        bfs([i, j])
+        // houses.push(dfs([i, j]))
+      }
     }
+  }
+
+  houses.sort((a, b) => a - b)
+  console.log(count)
+  for (let i = 0; i < houses.length; i++) {
+    console.log(houses[i])
+  }
+
+  function bfs(startNode) {
+    const q = [startNode]
+    let houseCnt = 1
+    while (q.length > 0) {
+      const [x, y] = q.shift()
+      array[x][y] = 0
+      for (let i = 0; i < 4; i++) {
+        const [move_x, move_y] = directions[i]
+        const nx = x + move_x,
+          ny = y + move_y
+
+        if (nx < 0 || nx >= n || ny < 0 || ny >= n) continue
+        if (array[nx][ny] == 1) {
+          q.push([nx, ny])
+          array[nx][ny] = 0
+          houseCnt += 1
+        }
+      }
+    }
+    // console.log("houseCnt", houseCnt)
+    houses.push(houseCnt)
+  }
+
+  function dfs(startNode) {
+    const [x, y] = startNode
+    let houseCnt = 1
+    array[x][y] = 0
+    for (let i = 0; i < 4; i++) {
+      const [mx, my] = directions[i]
+      const nx = x + mx,
+        ny = y + my
+
+      if (nx < 0 || nx >= n || ny < 0 || ny >= n) continue
+      if (array[nx][ny] == 1) {
+        array[nx][ny] = 0
+        houseCnt += dfs([nx, ny])
+      }
+    }
+    return houseCnt
   }
 }
 
@@ -103,3 +87,11 @@ solution(`5
 00000
 00000
 00000`)
+console.log("")
+
+solution(`5
+11000
+11001
+11000
+11111
+11111`)
