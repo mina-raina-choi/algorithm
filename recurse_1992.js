@@ -101,7 +101,7 @@ function solution(params) {
     outer: for (let i = x; i < x + n; i++) {
       inner: for (let j = y; j < y + n; j++) {
         const element = array[j][i]
-        // 하나라도 같지 않으면 빠져나오기
+        // 하나라도 같지 않으면, 재귀적으로 쿼드트리 또 탐색
         if (element != first) {
           isBreak = true
           answer += "("
@@ -116,6 +116,7 @@ function solution(params) {
       }
     }
 
+    // 모두 같은 숫자로 되어 있으면
     if (!isBreak) {
       if (first == 1) answer += 1
       else answer += 0
