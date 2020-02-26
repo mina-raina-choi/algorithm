@@ -1,50 +1,6 @@
-function solution(inputString) {
-  const n = parseInt(inputString)
-  const array = new Array(n).fill(null).map(a => 0)
-  console.log(array)
-  let result = 0
-
-  dfs(0)
-  console.log(result)
-
-  // x번째 행에 놓은 퀸에 대해서 검증
-  function check(x) {
-    // 이전 행에서 놓았던 모든 퀸들을 확인
-    for (let i = 0; i < x; i++) {
-      // 위쪽 or 대각선 확인
-      if (array[x] == array[i]) {
-        return false
-      }
-
-      if (Math.abs(array[x] - array[i]) == x - i) {
-        return false
-      }
-
-      return true
-    }
-  }
-
-  // x번 째 행에 대해서 처리
-  function dfs(x) {
-    console.log("dfs", x)
-    if (x == n) {
-      result++
-    } else {
-      // x번째 행의 각 열에 퀸을 둔다고 가정
-      for (let i = 0; i < n; i++) {
-        array[x] = i
-        if (check(x)) {
-          dfs(x + 1)
-        }
-      }
-    }
-  }
-}
-
-solution(8)
+solution(4)
 
 // 퀸이 움직일 수 있는 범위 : 전후좌우, 대각선
-// ! 7개 밖에 놓을 수 없는데? 어떻게 8개를 놓지?
 
 // 백트래킹문제란, 가능한 경우를 전부 탐색하면서 더이상 나아갈 수 없는 경우를 만났을때, 다시 다른 경우를 탐색하는 문제.
 // 보통 dfs/bfs와 같은 맥락
@@ -54,4 +10,46 @@ solution(8)
 // 각 행을 차례대로 확인하면서, 각 열에 퀸을 놓는 모든 경우를 고려
 // -> 위쪽 행을 모두 확인하면서 현재 위치에 놓을 수 있는지 확인!
 
-// ! 이해가 안됨.
+// 핵심 아이디어는 한 줄씩 검증! 일일이 각 행마다 넣어보면서
+function solution(params) {
+  const n = parseInt(params)
+  let count = 0
+  // array[i] 는 i 열에 퀸을 놓은 위치
+  const array = new Array(n).fill(0)
+
+  dfs(0)
+  console.log(count)
+
+  function dfs(x) {
+    // 퀸을 n개까지 다 놓았다면 count를 한다.
+    if (x == n) {
+      console.log(array.join(" "))
+      count++
+    } else {
+      // 한 줄에 0~n까지 놓아본다
+      for (let i = 0; i < n; i++) {
+        array[x] = i
+        // 만약 x위치에 퀸을 놓을 수 있다면 다음 열로 넘어간다.
+        if (check(x)) {
+          dfs(x + 1)
+        }
+      }
+    }
+  }
+
+  // x 우ㅣ치에 퀸을 놓을 수 있는지 없는지 확인
+  function check(x) {
+    // x 이전의 열들을 모두 검사
+    for (let i = 0; i < x; i++) {
+      // 같은 행 X
+      if (array[x] == array[i]) {
+        return false
+      }
+      // 대각선 X
+      if (Math.abs(array[x] - array[i]) == x - i) {
+        return false
+      }
+    }
+    return true
+  }
+}
