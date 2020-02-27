@@ -33,7 +33,7 @@ function solution(params) {
   bfs(startNode)
 
   console.log("dist", dist)
-  console.log(dist[endNode[0]][endNode[1]])
+  // console.log(dist[endNode[0]][endNode[1]])
 
   function bfs(startNode) {
     const q = [startNode]

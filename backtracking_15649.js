@@ -51,5 +51,5 @@ function solution(params) {
   }
 }
 
-solution(`4 2`)
-solution(`4 4`)
+// solution(`4 2`)
+solution(`3 3`)
