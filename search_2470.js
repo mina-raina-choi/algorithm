@@ -42,11 +42,8 @@ function solution(params) {
 
 // ! 시간초과
 
-// solution2(`5
-// -2 4 -99 -1 98`)
-
-// solution2(`4
-// -3 -1 1 10`)
+solution2(`4
+-3 -1 1 10`)
 // //정답: -1 1
 
 solution2(`4
@@ -88,3 +85,39 @@ function solution2(params) {
 
   console.log(liquids[idx1], liquids[idx2])
 }
+
+function solution2(params) {
+  const input = params.split("\n")
+  const n = parseInt(input.shift())
+
+  const liquids = input[0]
+    .split(" ")
+    .map(a => +a)
+    .sort((a, b) => a - b)
+
+  let low = 0,
+    high = n - 1
+  let min = Infinity,
+    pair
+
+  // 같으면 안됨
+  while (low < high) {
+    const sum = liquids[low] + liquids[high]
+    // console.log(sum, min)
+    if (Math.abs(sum) < min) {
+      pair = [liquids[low], liquids[high]]
+      min = Math.abs(sum)
+    }
+
+    if (sum > 0) {
+      // high를 낮춰야함
+      high -= 1
+    } else {
+      low += 1
+    }
+  }
+  console.log(pair.join(" "))
+}
+
+solution2(`5
+-2 4 -99 -1 98`)
