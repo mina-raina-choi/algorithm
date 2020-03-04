@@ -61,6 +61,13 @@ solution2(`7
 solution2(`10
 11 23 55 -9 199 -34 -76 76 -1 -3`)
 
+solution2(`10
+739762262 811870375 6349594 125931388 -812966640 469406576 -134787694 993470627 -907859954 -989831`)
+
+solution2(`10
+254336095 47691541 257341582 -144645454 861485597 33299316 -291023334 -255047743 -645353494 329443014
+`)
+
 function solution2(params) {
   const input = params.split("\n")
   const n = parseInt(input.shift())
@@ -94,4 +101,55 @@ function solution2(params) {
     }
   }
   console.log(liquids[idx1], liquids[idx2], liquids[idx3])
+}
+
+function solution2(params) {
+  const input = params.split("\n")
+  const n = parseInt(input.shift())
+
+  const liquids = input[0]
+    .split(" ")
+    .map(a => +a)
+    .sort((a, b) => a - b)
+
+  let low = 0,
+    high = n - 1
+  let min = Infinity,
+    i,
+    j,
+    k
+  // 같으면 안됨
+  while (low < high) {
+    let sum = liquids[low] + liquids[high]
+
+    // 가운데 값에서 이진탐색을 또한번
+    let innerLow = low + 1,
+      innerHigh = high - 1,
+      mid
+    while (innerLow <= innerHigh) {
+      mid = parseInt((innerHigh + innerLow) / 2)
+      sum += liquids[mid]
+      if (Math.abs(sum) < min) {
+        i = low
+        j = mid
+        k = high
+        min = Math.abs(sum)
+      }
+
+      if (sum > 0) {
+        // high를 낮춰야함
+        innerHigh -= 1
+      } else {
+        innerLow += 1
+      }
+    }
+
+    if (sum > 0) {
+      // high를 낮춰야함
+      high -= 1
+    } else {
+      low += 1
+    }
+  }
+  console.log(liquids[i], liquids[j], liquids[k])
 }
