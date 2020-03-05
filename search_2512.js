@@ -47,22 +47,61 @@ function solution(params) {
   }
 }
 
-solution(`4
+solution2(`4
 120 110 140 150
 485`)
 // 127
-solution(`4
+
+solution2(`4
 120 110 140 150
 519`)
 // 149
 
-solution(`4
-4 3 2 1
-10`)
-
-solution(`3
-4 4 5
-20`)
+solution2(`2
+10 20
+12`)
 
 // https://devpouch.tistory.com/52 이 풀이와 뭐가 다르지?
 //
+
+function solution2(params) {
+  const input = params.split("\n")
+  const n = parseInt(input.shift())
+  const budgets = input
+    .shift()
+    .split(" ")
+    .map(a => +a)
+    .sort()
+
+  const maxBudget = parseInt(input.shift())
+
+  let row = 0,
+    high = budgets[n - 1],
+    mid = 0,
+    result = 0
+
+  while (row <= high) {
+    mid = parseInt((row + high) / 2)
+    let total = 0
+    // mid값으로 모든 도시에 원하는만큼 예산을 줄 수 있는지 체크
+    for (let i = 0; i < n; i++) {
+      if (budgets[i] <= mid) {
+        total += budgets[i]
+      } else {
+        total += mid
+      }
+    }
+
+    // console.log("total", total)
+    if (total <= maxBudget) {
+      row = mid + 1
+      result = Math.max(mid, result)
+    } else {
+      // mid를 낮춰야함
+      high = mid - 1
+    }
+  }
+
+  // 최댓값인 정수를 출력
+  console.log(result)
+}
