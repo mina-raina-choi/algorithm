@@ -9,9 +9,7 @@ function solution(params) {
     let changed = false
     for (let j = 0; j < n - 1 - i; j++) {
       if (input[j] > input[j + 1]) {
-        const temp = input[j]
-        input[j] = input[j + 1]
-        input[j + 1] = temp
+        ;[input[j], input[j + 1]] = [input[j + 1], input[j]]
         changed = true
         count++
       }
@@ -23,94 +21,105 @@ function solution(params) {
   console.log(count)
 }
 
-// 병합정렬로 버블sort의 swap이 일어나는 경우를 count
+// -> 버블정렬로 풀면 시간초과
+
+solution2(`3
+3 2 1`)
+// 3
+
+solution2(`5
+5 4 3 2 1`)
+// 10
+
+solution2(`3
+5 5 5`)
+// 0
+
+// https://justicehui.github.io/ps/2019/04/23/BOJ1517/ 이거 참고...
+
+// 로직이 맞는 거 같은데 왜... 30%에서 런타임에러
 function solution2(params) {
-  const input = params.split("\n")
+  let input = params.split("\n")
   const n = parseInt(input.shift())
-  const nums = input[0].split(" ").map(a => +a)
+  input = input[0].split(" ").map(a => +a)
+  let cnt = 0
 
-  // console.log(n, nums)
-  let count = 0
-  const sorted = split(nums)
-  console.log(count)
-  // length == 1일 때까지
-  function split(array) {
-    const len = array.length
+  divide(input)
 
-    if (len == 1) return array
-    const mid = parseInt(len / 2)
-    const left = split(array.slice(0, mid))
-    const right = split(array.slice(mid))
-    // console.log("left, right", left, right)
-    return merge2(left, right)
+  console.log(cnt)
+  // 1. divide
+  // 2. merge
+
+  function divide(array) {
+    if (array.length == 1) return array
+    const mid = parseInt(array.length / 2)
+    const left = divide(array.slice(0, mid)),
+      right = divide(array.slice(mid))
+    return merge(left, right)
   }
 
-  // 합치면서 count++
   function merge(left, right) {
-    const result = []
-    while (left.length > 0 && right.length > 0) {
-      if (left[0] > right[0]) {
-        // console.log("change", left, right)
-        count += 1
-        result.push(right.shift())
-      } else {
-        result.push(left.shift())
-      }
-    }
-    return [...result, ...left, ...right]
-  }
+    let i = 0,
+      j = 0
 
-  function merge2(left, right) {
-    // console.log("merge2 left", left, "right", right)
     const merged = []
-    // 하나하나비교하면서 ....
-    let leftIndex = 0,
-      rightIndex = 0
-    let cnt = 0
-
     // left, right 둘다
-    while (leftIndex < left.length && rightIndex < right.length) {
-      if (left[leftIndex] > right[rightIndex]) {
-        merged.push(right[rightIndex])
-        rightIndex++
-        cnt++
-        // console.log("cnt", cnt, left[leftIndex], right[rightIndex], merged)
+    while (left.length > i && right.length > j) {
+      if (left[i] > right[j]) {
+        // 왼쪽에 남아있는 원소들의 개수
+        cnt += left.length - i
+        merged.push(right[j])
+        j++
       } else {
-        merged.push(left[leftIndex])
-        leftIndex++
+        merged.push(left[i])
+        i++
       }
     }
 
-    // left
-    while (left && leftIndex < left.length) {
-      merged.push(left[leftIndex])
-      leftIndex++
-      if (merged.length > 2) cnt++
-      // console.log("왼쪽 cnt", cnt, left[leftIndex], merged)
-    }
-    // right
-    while (right && rightIndex < right.length) {
-      merged.push(right[rightIndex])
-      rightIndex++
-    }
+    // left, right는 이미 정렬된 상태
 
-    count += cnt
-    // console.log("merged", merged)
+    if (left.length > i) merged.push(...left.slice(i))
+    if (right.length > j) merged.push(...right.slice(j))
+
     return merged
   }
 }
 
-solution2(`3
-3 2 1`)
+// 통과된 답변
+function solution2(params) {
+  let input = params.split("\n")
+  const n = parseInt(input.shift())
+  input = input[0].split(" ").map(a => +a)
 
-// solution(`5
-// 5 4 3 2 1`)
+  const merged = []
+  const array = [...input]
+  let cnt = solve(0, n - 1)
+  console.log(cnt)
 
-solution2(`5
-5 4 3 2 1`)
+  // swap 개수 세는 함수
+  function solve(start, end) {
+    // console.log("solve", start, end)
+    if (start == end) return 0
+    let mid = parseInt((start + end) / 2)
+    let ans = solve(start, mid) + solve(mid + 1, end)
 
-// solution2(`3
-// 5 5 5`)
+    let i = start
+    let j = mid + 1
+    let k = 0
 
-// https://justicehui.github.io/ps/2019/04/23/BOJ1517/ 이거 참고...
-// ! 실패
+    while (i <= mid || j <= end) {
+      if (i <= mid && (j > end || array[i] <= array[j])) {
+        merged[k++] = array[i++]
+      } else {
+        // 왼쪽 배열의 남아있는 원소들의 개수
+        ans += mid - i + 1
+        merged[k++] = array[j++]
+      }
+    }
+    for (let i = start; i <= end; i++) {
+      array[i] = merged[i - start]
+    }
+    // console.log("merged", merged)
+    return ans
+  }
+}
