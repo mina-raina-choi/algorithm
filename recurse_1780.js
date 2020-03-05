@@ -50,7 +50,7 @@ function solution(params) {
   }
 }
 
-solution(`9
+solution2(`9
 0 0 0 1 1 1 -1 -1 -1
 0 0 0 1 1 1 -1 -1 -1
 0 0 0 1 1 1 -1 -1 -1
@@ -60,3 +60,55 @@ solution(`9
 0 1 -1 0 1 -1 0 1 -1
 0 -1 1 0 1 -1 0 1 -1
 0 1 -1 1 0 -1 0 1 -1`)
+
+function solution2(params) {
+  const input = params.split("\n")
+  const n = parseInt(input.shift())
+  const array = input.map(a => a.split(" ").map(a => +a))
+
+  // console.log(array)
+  let minusCnt = 0,
+    zeroCnt = 0,
+    plusCnt = 0
+
+  count(0, 0, n)
+
+  console.log(minusCnt)
+  console.log(zeroCnt)
+  console.log(plusCnt)
+
+  function count(x, y, n) {
+    console.log("count", x, y, n)
+    if (n < 1) return
+    // 시작점 x,y 로부터 x+n, y+n 사이에 숫자가 동일한지 체크
+    // 아니면 재귀로 다시 돌림
+    let first = array[x][y]
+    let allSame = true
+    outer: for (let i = x; i < x + n; i++) {
+      for (let j = y; j < y + n; j++) {
+        const elem = array[i][j]
+        if (first != elem) {
+          allSame = false
+          break outer
+        }
+      }
+    }
+
+    if (allSame) {
+      if (first == 0) zeroCnt++
+      else if (first == -1) minusCnt++
+      else plusCnt++
+    } else {
+      const nn = n / 3
+      count(x, y, nn)
+      count(x + nn, y, nn)
+      count(x + 2 * nn, y, nn)
+      count(x, y + nn, nn)
+      count(x, y + nn * 2, nn)
+      count(x + 2 * nn, y + nn, nn)
+      count(x + nn, y + nn, nn)
+      count(x + nn, y + nn * 2, nn)
+      count(x + 2 * nn, y + nn * 2, nn)
+    }
+  }
+}
