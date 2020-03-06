@@ -2,21 +2,19 @@
 // console.log('this is a debug message');
 
 function solution(K, M, A) {
-  // write your code in JavaScript (Node.js 8.9.4)
   const sum = A.reduce((a, b) => a + b, 0)
   const n = A.length
   let row = 0,
     high = sum,
     mid
-  let answer = Infinity
 
-  while (row <= high) {
-    // console.log(row, high)
+  while (row < high) {
     mid = parseInt((row + high) / 2)
+    // console.log(row, high)
     // console.log("새로운 mid", mid)
-    let cnt = 0
+    let kCnt = 0
     let tempSum = 0
-    let arr = []
+    let arrLen = 0
 
     // mid보다 작은 합으로 구성가능한 갯수 세기
     for (let i = 0; i < A.length; i++) {
@@ -26,44 +24,42 @@ function solution(K, M, A) {
         break
       }
 
-      if (cnt == K) {
+      if (kCnt == K) {
         break
       }
 
       tempSum += A[i]
 
       if (tempSum == mid) {
-        cnt++
-        arr.push(A[i])
+        kCnt++
+        arrLen++
+        // console.log(A[i])
         tempSum = 0
       } else if (tempSum > mid) {
-        cnt++
+        kCnt++
         // 이전인덱스로
         i--
         tempSum = 0
       } else {
         // tempSum < mid
-        arr.push(A[i])
+        arrLen++
+        // console.log(A[i])
         continue
       }
     }
-    // console.log("arr", arr)
 
-    if (arr.length == n) {
-      if (cnt == K) {
+    if (arrLen == n) {
+      if (kCnt <= K) {
         // 최소값을 탐색하기 위해서 더 낮은 mid
-        answer = Math.min(mid, answer)
-        high = mid - 1
-      } else if (cnt < K) {
-        high = mid - 1
+        high = mid
       } else {
         row = mid + 1
       }
-    } else if (arr.length < n) {
+    } else if (arrLen < n) {
       // mid up row up
       row = mid + 1
     } else {
-      high = mid - 1
+      high = mid
     }
   }
 
@@ -72,11 +68,10 @@ function solution(K, M, A) {
   return row
 }
 
-// solution(3, 5, [2, 1, 5, 1, 2, 2, 2])
-// solution(1, 10, [4, 3, 2, 5, 6, 6, 4, 9])
-// solution(2, 10, [4, 4])
+solution(3, 5, [2, 1, 5, 1, 2, 2, 2])
+solution(1, 10, [4, 3, 2, 5, 6, 6, 4, 9])
+solution(2, 10, [4, 4])
 solution(1, 10000, [0, 10000, 0])
-// ! 10000
 
 /* 
 핵심아이디어
