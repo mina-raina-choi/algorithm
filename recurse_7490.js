@@ -4,24 +4,25 @@ function solution(params) {
   const arithmetic = ["+", "-", " "]
 
   for (let i = 0; i < testCase; i++) {
-    const array = ["+", "-", " "]
     const n = input.shift()
-    const newArr = recurse(array, n)
-    console.log(newArr)
+    recurse(1, 2, n)
+    console.log("")
   }
 
-  function recurse(array, n) {
-    const newArray = []
-
-    for (let j = 0; j < n; j++) {
-      const element = array[j]
-      console.log("element", element)
-
-      for (let i = 0; i < 3; i++) {
-        newArray.push(element + arithmetic[i])
+  function recurse(first, second, n) {
+    if (second > n) {
+      // 체크 0인지
+      if (eval(first.replace(/ /g, "")) == 0) {
+        console.log(first)
       }
+      return
     }
-    return newArray
+
+    for (let i = 0; i < 3; i++) {
+      const element = arithmetic[i]
+      const temp = first + element + second
+      recurse(temp, second + 1, n)
+    }
   }
 }
 
@@ -29,5 +30,7 @@ function solution(params) {
 // 연산자 리스트
 
 solution(`2
-  3
-  7`)
+3
+7`)
+
+// https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/eval
