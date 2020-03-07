@@ -26,37 +26,36 @@ function solution(params) {
 
   // value와 같거나 처음으로 큰 값 : value 값으로 시작하는 제일 작은 값
   function findLowerBound(value, array) {
-    let row = 0,
+    let low = 0,
       high = array.length,
       mid = 0
-    while (row < high) {
-      mid = parseInt((row + high) / 2)
-
+    while (low < high) {
+      mid = parseInt((low + high) / 2)
       if (value <= array[mid]) {
         high = mid
       } else {
-        row = mid + 1
+        low = mid + 1
       }
     }
     // console.log("lowerbound", mid)
-    return row
+    return low
   }
 
   // value보다 큰 값 중에 제일 작은 값
   function findHighBound(value, array) {
-    let row = 0,
+    let low = 0,
       high = array.length,
       mid = 0
-    while (row < high) {
-      mid = parseInt((row + high) / 2)
+    while (low < high) {
+      mid = parseInt((low + high) / 2)
       if (value >= array[mid]) {
-        row = mid + 1
+        low = mid + 1
       } else {
         high = mid
       }
     }
     // console.log("highbound", mid)
-    return row
+    return low
   }
 }
 
