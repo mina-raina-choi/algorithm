@@ -42,5 +42,25 @@ function solution2(inputString) {
   console.log(Math.max(...dp))
 }
 
-solution2(`6
+solution(`6
 10 20 10 30 20 50`)
+
+function solution(params) {
+  const input = params.split("\n")
+  const n = parseInt(input.shift())
+  const array = input
+    .shift()
+    .split(" ")
+    .map(a => +a)
+
+  const dp = new Array(n + 1).fill(1)
+
+  for (let i = 1; i < array.length; i++) {
+    for (let j = 0; j < i; j++) {
+      if (array[i] > array[j]) {
+        dp[i] = Math.max(dp[j] + 1, dp[i])
+      }
+    }
+  }
+  console.log(Math.max(...dp))
+}
