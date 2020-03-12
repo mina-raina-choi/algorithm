@@ -33,3 +33,29 @@ solution(`4
 
 solution(`1
 100000`)
+
+function solution(params) {
+  const input = params.split("\n")
+  const n = parseInt(input.shift())
+
+  for (let i = 0; i < n; i++) {
+    const elem = input[i]
+    let reversed = ""
+    let answer = "YES"
+
+    for (let j = elem.length - 1; j >= 0; j--) {
+      reversed += elem[j]
+    }
+    const sum = parseInt(elem) + parseInt(reversed) + ""
+
+    for (let j = 0; j <= parseInt(sum.length / 2); j++) {
+      const element = sum[j]
+      const last = sum[sum.length - 1 - j]
+      if (element !== last) {
+        answer = "NO"
+      }
+    }
+    // console.log(elem, reversed, sum)
+    console.log("answer", answer)
+  }
+}
