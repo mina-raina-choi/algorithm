@@ -40,3 +40,28 @@ cannot
 wait
 im
 yours`)
+
+function solution(params) {
+  const input = params.split("\n")
+  const n = parseInt(input.shift())
+  const set = new Set()
+
+  const sorted = input.sort((a, b) => {
+    if (a.length == b.length) {
+      // 사전식
+      return a.localeCompare(b)
+    }
+    return a.length - b.length
+  })
+  // console.log(sorted)
+
+  sorted.forEach(a => {
+    set.add(a)
+  })
+
+  // console.log(set)
+
+  set.forEach(a => {
+    console.log(a)
+  })
+}
