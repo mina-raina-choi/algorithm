@@ -89,21 +89,21 @@ function getSortedGraph(inputPairs) {
   return adjList
 }
 
-solution2(`4 5 1
+solution(`4 5 1
 1 2
-1 3
 1 4
+1 3
 2 4
 3 4`)
 
-solution2(`5 5 3
+solution(`5 5 3
 5 4
 5 2
 1 2
 3 4
 3 1`)
 
-solution2(`1000 1 1000
+solution(`1000 1 1000
 999 1000`)
 
 function solution2(param) {
@@ -183,5 +183,78 @@ function solution2(param) {
     })
 
     return map
+  }
+}
+
+function solution(params) {
+  const input = params.split("\n")
+  const [nodeCnt, edgeCnt, startNode] = input
+    .shift()
+    .split(" ")
+    .map(a => +a)
+  const pairs = input.map(a => a.split(" ").map(a => +a))
+  console.log(nodeCnt, edgeCnt, startNode, pairs)
+
+  function getGraph(pairs) {
+    const map = new Map()
+    pairs.forEach(a => {
+      if (map.get(a[0])) {
+        map.get(a[0]).push(a[1])
+      } else {
+        map.set(a[0], [a[1]])
+      }
+
+      if (map.get(a[1])) {
+        map.get(a[1]).push(a[0])
+      } else {
+        map.set(a[1], [a[0]])
+      }
+    })
+    // sort
+    map.forEach(a => a.sort((a, b) => a - b))
+    // console.log("map", map)
+
+    return map
+  }
+
+  const map = getGraph(pairs)
+
+  let visited = new Array(nodeCnt + 1).fill(false)
+  let nodes = []
+  dfs(startNode, visited)
+  console.log(nodes.join(" "))
+  visited = new Array(nodeCnt + 1).fill(false)
+  nodes = []
+  bfs(startNode, visited)
+  console.log(nodes.join(" "))
+
+  function dfs(startNode, visited) {
+    // console.log(startNode)
+    nodes.push(startNode)
+    visited[startNode] = true
+    const neighbors = map.get(startNode)
+    neighbors.forEach(a => {
+      if (!visited[a]) {
+        visited[a] = true
+        dfs(a, visited)
+      }
+    })
+  }
+
+  function bfs(startNode, visited) {
+    const q = [startNode]
+    visited[startNode] = true
+    while (q.length > 0) {
+      const node = q.shift()
+      nodes.push(node)
+
+      const neighbors = map.get(node)
+      neighbors.forEach(a => {
+        if (!visited[a]) {
+          visited[a] = true
+          q.push(a)
+        }
+      })
+    }
   }
 }
