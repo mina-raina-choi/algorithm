@@ -47,3 +47,29 @@ solution(`7 1 2 3 4 5 6 7
 
 // 1. 정렬되어 있는 k 개 숫자 중에서 6개를 선택하는 모든 조합
 // 2. dfs를 이용해서 조합함수를 구현
+
+function solution(params) {
+  const input = params.split("\n")
+  const len = input.length - 1
+
+  for (let i = 0; i < len; i++) {
+    const element = input[i].split(" ")
+    const n = parseInt(element.shift())
+
+    const arr = []
+
+    combination(0, element, arr)
+    if (i < len - 1) console.log()
+  }
+  function combination(start, array, picked) {
+    if (picked.length == 6) {
+      console.log(picked.join(" "))
+      return
+    }
+    for (let j = start; j < array.length; j++) {
+      picked.push(array[j])
+      combination(j + 1, array, picked)
+      picked.pop()
+    }
+  }
+}
