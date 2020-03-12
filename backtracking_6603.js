@@ -73,3 +73,38 @@ function solution(params) {
     }
   }
 }
+
+// 만약 로또의 순서에 따라 결과가 달라진다면?
+// 같은 숫자라도 순서가 다르면 다른 값이라고 한다면
+
+function solution(params) {
+  const input = params.split("\n")
+  const len = input.length - 1
+
+  for (let i = 0; i < 1; i++) {
+    const element = input[i].split(" ")
+    const n = parseInt(element.shift())
+
+    const arr = []
+    const visited = new Array(n).fill(false)
+
+    permutation(element, arr, visited, n)
+    if (i < len - 1) console.log()
+  }
+  function permutation(array, picked, visited, n) {
+    if (picked.length == 3) {
+      console.log(picked.join(" "))
+      return
+    }
+
+    for (let i = 0; i < n; i++) {
+      if (!visited[i]) {
+        picked.push(array[i])
+        visited[i] = true
+        permutation(array, picked, visited, n)
+        visited[i] = false
+        picked.pop()
+      }
+    }
+  }
+}
