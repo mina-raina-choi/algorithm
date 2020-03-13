@@ -5,7 +5,9 @@ function solution(params) {
 
   const merged = []
   divide(nums, 0, n - 1)
-  merged.forEach(a => console.log(a))
+  let result = ""
+  merged.forEach((a, i) => (result += `${a}${i != n - 1 ? "\n" : ""}`))
+  console.log(result)
 
   function divide(array, start, end) {
     if (start < end) {
@@ -15,10 +17,8 @@ function solution(params) {
       merge(array, start, mid, end)
     }
   }
-
   function merge(a, start, mid, end) {
     // console.log(merged, start, mid, end)
-
     let i = start,
       k = start,
       j = mid + 1
@@ -49,30 +49,33 @@ function solution(params) {
     for (let q = start; q <= end; q++) {
       a[q] = merged[q]
     }
+  }
 
-    // while (left && left.length > l && right && right.length > r) {
-    //   if (left[l] < right[r]) {
-    //     merged[i] = left[l]
-    //     i++
-    //     l++
-    //   } else {
-    //     merged[i] = right[r]
-    //     i++
-    //     r++
-    //   }
-    // }
-
-    // while (left && left.length > l) {
-    //   merged[i] = left[l]
-    //   i++
-    //   l++
-    // }
-
-    // while (right && right.length > r) {
-    //   merged[i] = right[r]
-    //   i++
-    //   r++
-    // }
+  function merge2(left, right) {
+    let l = 0,
+      r = 0,
+      i = 0
+    while (left && left.length > l && right && right.length > r) {
+      if (left[l] < right[r]) {
+        merged[i] = left[l]
+        i++
+        l++
+      } else {
+        merged[i] = right[r]
+        i++
+        r++
+      }
+    }
+    while (left && left.length > l) {
+      merged[i] = left[l]
+      i++
+      l++
+    }
+    while (right && right.length > r) {
+      merged[i] = right[r]
+      i++
+      r++
+    }
   }
 }
 
